@@ -26,6 +26,12 @@ bool GraphicsDevice::Init(HWND hwnd, int width, int height)
 		assert(0 && "スワップチェインの作成失敗");
 		return false;
 	}
+
+	if (!CreateSwapchainRTV())
+	{
+		assert(0 && "スワップチェインRTVの作成失敗");
+		return true;
+	}
 	
 	return true;
 }
@@ -186,5 +192,22 @@ bool GraphicsDevice::CreateSwapchain(HWND hwnd, int width, int height)
 	{
 		return false;
 	}
+	return true;
+}
+
+bool GraphicsDevice::CreateSwapchainRTV()
+{
+	pRTVHeap_ = std::make_unique<RTVHeap>();
+
+	for (int i = 0; i< (int)pSwapchainBuffers_.size();++i)
+	{
+		auto hr = pSwapChain->GetBuffer(i, IID_PPV_ARGS(&pSwapchainBuffers_[i]));
+		if (FAILED(hr))
+		{
+			return false;
+		}
+		pRTVHeap_->CreateRTV(pSwapchainBuffers_[i].Get());
+	}
+
 	return true;
 }

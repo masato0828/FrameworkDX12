@@ -1,6 +1,5 @@
 #pragma once
 
-
 #define lpGraphicsDevice  GraphicsDevice::Instance()
 
 class GraphicsDevice
@@ -41,6 +40,12 @@ private:
 	/// <returns>成功したらtrue</returns>
 	bool CreateSwapchain(HWND hwnd,int width,int height);
 
+	/// <summary>
+	/// スワップチェインRTVの作成
+	/// </summary>
+	/// <returns>成功したらtrue</returns>
+	bool CreateSwapchainRTV();
+
 	enum class GPUTier
 	{
 		NVIDIA,
@@ -51,14 +56,17 @@ private:
 		Kind,
 	};
 
-	ComPtr<ID3D12Device8>	pDevice = nullptr;
-	ComPtr<IDXGIFactory6>	pDxgiFactory = nullptr;
+	ComPtr<ID3D12Device8>					pDevice = nullptr;
+	ComPtr<IDXGIFactory6>					pDxgiFactory = nullptr;
 
-	ComPtr<ID3D12CommandAllocator>		pCmdAllocator = nullptr;
-	ComPtr<ID3D12GraphicsCommandList6>	pCmdList = nullptr;
-	ComPtr<ID3D12CommandQueue>			pCmdQueue = nullptr;
+	ComPtr<ID3D12CommandAllocator>			pCmdAllocator = nullptr;
+	ComPtr<ID3D12GraphicsCommandList6>		pCmdList = nullptr;
+	ComPtr<ID3D12CommandQueue>				pCmdQueue = nullptr;
 
-	ComPtr<IDXGISwapChain4> pSwapChain = nullptr;
+	ComPtr<IDXGISwapChain4>					pSwapChain = nullptr;
+
+	std::array<ComPtr<ID3D12Resource>, 2>	pSwapchainBuffers_;
+	std::unique_ptr<RTVHeap>				pRTVHeap_ = nullptr;
 
 	GraphicsDevice() {};
 	~GraphicsDevice() {};
