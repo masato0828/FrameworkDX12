@@ -245,7 +245,7 @@ bool GraphicsDevice::CreateSwapchain(HWND hwnd, int width, int height)
 	DXGI_SWAP_CHAIN_DESC1 swapchainDesc = {};
 	swapchainDesc.Width = width;
 	swapchainDesc.Height = height;
-	swapchainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	swapchainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapchainDesc.SampleDesc.Count = 1;
 	swapchainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;
 	swapchainDesc.BufferCount = 2;
