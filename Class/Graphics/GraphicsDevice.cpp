@@ -3,6 +3,7 @@
 
 bool GraphicsDevice::Init(HWND hwnd, int width, int height)
 {
+	
 	if (!CreateFactory())
 	{
 		assert(0 &&"ファクトリー作成失敗");
@@ -27,20 +28,86 @@ bool GraphicsDevice::Init(HWND hwnd, int width, int height)
 		return false;
 	}
 
+
+	pRTVHeap_ = std::make_unique<RTVHeap>();
+	if (!pRTVHeap_->Create(pDevice_.Get(),100))
+	{
+		assert(0&&"RTVヒープの作成失敗");
+		return false;
+	}
+
 	if (!CreateSwapchainRTV())
 	{
 		assert(0 && "スワップチェインRTVの作成失敗");
-		return true;
+		return false;
+	}
+
+	if (!CreateFence())
+	{
+		assert(0&& "フェンスの作成失敗");
+		return false;
 	}
 	
 	return true;
+}
+
+void GraphicsDevice::ScreenFlip()
+{
+	// 1 リソースバリアのステートをレンダーターゲットに変更
+	auto  bbIdx = pSwapChain_->GetCurrentBackBufferIndex();
+	SetResourceBarrier(pSwapchainBuffers_[bbIdx].Get(),D3D12_RESOURCE_STATE_PRESENT,
+		D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	// 2 レンダーターゲットをセット
+	auto rtvH = pRTVHeap_->GetRTVCPHandle(bbIdx);
+	pCmdList_->OMSetRenderTargets(1,&rtvH,false,nullptr);
+
+	// 3 セットしたレンダーターゲットの画面をクリア
+	float crearColor[] = {1.0f,0.0f,1.0f,1.0f};// 紫色
+	pCmdList_->ClearRenderTargetView(rtvH,crearColor,0,nullptr);
+
+	// 4 リソースバリアのステートをプレゼントに戻す
+	SetResourceBarrier(pSwapchainBuffers_[bbIdx].Get(),D3D12_RESOURCE_STATE_RENDER_TARGET,
+		D3D12_RESOURCE_STATE_PRESENT);
+
+	// 5 コマンドリストを閉じて実行する
+	pCmdList_->Close();
+	ID3D12CommandList* cmdlists[] = { pCmdList_.Get() };
+	pCmdQueue_->ExecuteCommandLists(1,cmdlists);
+
+	// 6 コマンドリストの同期を待つ
+	WaitForCommandQueue();
+
+	// 7 コマンドアロケーターとコマンドリストを初期化
+	pCmdAllocator_->Reset();							// コマンドアロケーターの初期化
+	pCmdList_->Reset(pCmdAllocator_.Get(),nullptr);		// コマンドリストの初期化
+
+	// 8 スワップチェインにプレゼント(送る)
+	pSwapChain_->Present(1,0);
+}
+
+void GraphicsDevice::WaitForCommandQueue()
+{
+	pCmdQueue_->Signal(pFence_.Get(),++fenceVal_);
+
+	if (pFence_->GetCompletedValue() != fenceVal_)
+	{
+		auto event = CreateEvent(nullptr,false,false,nullptr);
+		if (!event)
+		{
+			assert(0&&"イベントエラー、アプリケーションを終了します");
+		}
+		pFence_->SetEventOnCompletion(fenceVal_,event);
+		WaitForSingleObject(event,INFINITE);		// イベントが発生sるまで待ち続ける
+		CloseHandle(event);							// イベントハンドルを閉じる
+	}
 }
 
 bool GraphicsDevice::CreateFactory()
 {
 	UINT flagsDXGI = 0;
 	flagsDXGI |= DXGI_CREATE_FACTORY_DEBUG;
-	auto result = CreateDXGIFactory2(flagsDXGI,IID_PPV_ARGS(pDxgiFactory.GetAddressOf()));
+	auto result = CreateDXGIFactory2(flagsDXGI,IID_PPV_ARGS(pDxgiFactory_.GetAddressOf()));
 	
 	if (FAILED(result))
 	{
@@ -59,7 +126,7 @@ bool GraphicsDevice::CreateDevice()
 	for (UINT index = 0;1;++index)
 	{
 		pAdapters.push_back(nullptr);
-		HRESULT ret = pDxgiFactory->EnumAdapters(index,&pAdapters[index]);
+		HRESULT ret = pDxgiFactory_->EnumAdapters(index,&pAdapters[index]);
 
 		if (ret == DXGI_ERROR_NOT_FOUND)
 		{
@@ -128,7 +195,7 @@ bool GraphicsDevice::CreateDevice()
 	D3D_FEATURE_LEVEL featureLevel;
 	for (auto lv : levels)
 	{
-		if (D3D12CreateDevice(pSelectAdapter.Get(), lv, IID_PPV_ARGS(&pDevice)) == S_OK)
+		if (D3D12CreateDevice(pSelectAdapter.Get(), lv, IID_PPV_ARGS(&pDevice_)) == S_OK)
 		{
 			featureLevel = lv;
 			break;    // 生成可能なバージョンが見つからなかったら打ち切り
@@ -140,15 +207,15 @@ bool GraphicsDevice::CreateDevice()
 
 bool GraphicsDevice::CreateCommandList()
 {
-	auto hr = pDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,IID_PPV_ARGS(&pCmdAllocator));
+	auto hr = pDevice_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,IID_PPV_ARGS(&pCmdAllocator_));
 	
 	if (FAILED(hr))
 	{
 		return false;
 	}
 
-	hr = pDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, pCmdAllocator.Get(),
-		nullptr, IID_PPV_ARGS(&pCmdList));
+	hr = pDevice_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, pCmdAllocator_.Get(),
+		nullptr, IID_PPV_ARGS(&pCmdList_));
 
 	if (FAILED(hr))
 	{
@@ -163,7 +230,7 @@ bool GraphicsDevice::CreateCommandList()
 
 
 	// キュー生成
-	hr = pDevice->CreateCommandQueue(&cmdQueueDesc,IID_PPV_ARGS(&pCmdQueue));
+	hr = pDevice_->CreateCommandQueue(&cmdQueueDesc,IID_PPV_ARGS(&pCmdQueue_));
 
 	if (FAILED(hr))
 	{
@@ -185,8 +252,8 @@ bool GraphicsDevice::CreateSwapchain(HWND hwnd, int width, int height)
 	swapchainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapchainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	
-	auto result = pDxgiFactory->CreateSwapChainForHwnd(pCmdQueue.Get(),hwnd,&swapchainDesc,
-		nullptr,nullptr,(IDXGISwapChain1**)pSwapChain.ReleaseAndGetAddressOf());
+	auto result = pDxgiFactory_->CreateSwapChainForHwnd(pCmdQueue_.Get(),hwnd,&swapchainDesc,
+		nullptr,nullptr,(IDXGISwapChain1**)pSwapChain_.ReleaseAndGetAddressOf());
 
 	if (FAILED(result))
 	{
@@ -197,17 +264,40 @@ bool GraphicsDevice::CreateSwapchain(HWND hwnd, int width, int height)
 
 bool GraphicsDevice::CreateSwapchainRTV()
 {
-	pRTVHeap_ = std::make_unique<RTVHeap>();
-
 	for (int i = 0; i< (int)pSwapchainBuffers_.size();++i)
 	{
-		auto hr = pSwapChain->GetBuffer(i, IID_PPV_ARGS(&pSwapchainBuffers_[i]));
+		auto hr = pSwapChain_->GetBuffer(i, IID_PPV_ARGS(&pSwapchainBuffers_[i]));
+		
 		if (FAILED(hr))
 		{
 			return false;
 		}
+		
 		pRTVHeap_->CreateRTV(pSwapchainBuffers_[i].Get());
 	}
 
 	return true;
+}
+
+bool GraphicsDevice::CreateFence()
+{
+	auto re = pDevice_->GetDeviceRemovedReason();
+
+	auto result = pDevice_->CreateFence(fenceVal_,D3D12_FENCE_FLAG_NONE,IID_PPV_ARGS(&pFence_));
+	
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void GraphicsDevice::SetResourceBarrier(ID3D12Resource* pResouce, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after)
+{
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Transition.pResource = pResouce;
+	barrier.Transition.StateAfter = after;
+	barrier.Transition.StateBefore = before;
+	pCmdList_->ResourceBarrier(1,&barrier);
 }
