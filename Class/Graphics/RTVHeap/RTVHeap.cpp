@@ -41,7 +41,7 @@ int RTVHeap::CreateRTV(ID3D12Resource* pBuffer)
 	return nextRegistNumber_++;
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE RTVHeap::GetRTVCPHandle(int number)
+D3D12_CPU_DESCRIPTOR_HANDLE RTVHeap::GetRTVCPUHandle(int number)
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = pHeap_->GetCPUDescriptorHandleForHeapStart();
 	handle.ptr += (UINT64)incrementSize_ * number;

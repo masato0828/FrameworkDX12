@@ -1,4 +1,5 @@
 #pragma once
+#include "../Pch.h"
 
 #define lpGraphicsDevice  GraphicsDevice::Instance()
 
@@ -112,9 +113,8 @@ private:
 	ComPtr<ID3D12Fence>						pFence_ = nullptr;
 	UINT64									fenceVal_ = 0;
 
-	GraphicsDevice() {};
-	~GraphicsDevice() {};
-
+	GraphicsDevice();
+	~GraphicsDevice();
 public:
 	static GraphicsDevice& Instance()
 	{

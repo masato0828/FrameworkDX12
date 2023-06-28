@@ -63,7 +63,7 @@ void GraphicsDevice::ScreenFlip()
 		D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	// 2 レンダーターゲットをセット
-	auto rtvH = pRTVHeap_->GetRTVCPHandle(bbIdx);
+	auto rtvH = pRTVHeap_->GetRTVCPUHandle(bbIdx);
 	pCmdList_->OMSetRenderTargets(1,&rtvH,false,nullptr);
 
 	// 3 セットしたレンダーターゲットの画面をクリア
@@ -102,7 +102,7 @@ void GraphicsDevice::WaitForCommandQueue()
 			assert(0&&"イベントエラー、アプリケーションを終了します");
 		}
 		pFence_->SetEventOnCompletion(fenceVal_,event);
-		WaitForSingleObject(event,INFINITE);		// イベントが発生sるまで待ち続ける
+		WaitForSingleObject(event,INFINITE);		// イベントが発生するまで待ち続ける
 		CloseHandle(event);							// イベントハンドルを閉じる
 	}
 }
@@ -285,8 +285,6 @@ bool GraphicsDevice::CreateSwapchainRTV()
 
 bool GraphicsDevice::CreateFence()
 {
-	auto re = pDevice_->GetDeviceRemovedReason();
-
 	auto result = pDevice_->CreateFence(fenceVal_,D3D12_FENCE_FLAG_NONE,IID_PPV_ARGS(&pFence_));
 	
 	if (FAILED(result))
@@ -313,4 +311,17 @@ void GraphicsDevice::EnableDebugLayer()
 	D3D12GetDebugInterface(IID_PPV_ARGS(&debugLayer));
 	debugLayer->EnableDebugLayer();			// デバッグレイヤーを有効にする
 	debugLayer->Release();
+}
+
+GraphicsDevice::GraphicsDevice()
+{
+}
+
+GraphicsDevice::~GraphicsDevice()
+{
+	// コマンドキューの処理を先に終わらせる
+	if (pSwapChain_.Get())
+	{
+		WaitForCommandQueue();
+	}
 }

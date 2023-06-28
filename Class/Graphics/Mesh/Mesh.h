@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Pch.h"
+//#include "../../Pch.h"
 
 class Mesh
 {

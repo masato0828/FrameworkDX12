@@ -154,6 +154,9 @@
     <ClCompile Include="Class\Application\Application.cpp" />
     <ClCompile Include="Class\Graphics\Mesh\Mesh.cpp" />
     <ClCompile Include="Class\Graphics\RTVHeap\RTVHeap.cpp" />
+    <ClCompile Include="Class\Graphics\Shader\Pipeline\Pipeline.cpp" />
+    <ClCompile Include="Class\Graphics\Shader\RootSignature\RootSignature.cpp" />
+    <ClCompile Include="Class\Graphics\Shader\Shader.cpp" />
     <ClCompile Include="Class\Pch.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pch.h</PrecompiledHeaderFile>
@@ -173,6 +176,9 @@
     <ClInclude Include="Class\Application\Application.h" />
     <ClInclude Include="Class\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="Class\Graphics\RTVHeap\RTVHeap.h" />
+    <ClInclude Include="Class\Graphics\Shader\Pipeline\Pipeline.h" />
+    <ClInclude Include="Class\Graphics\Shader\RootSignature\RootSignature.h" />
+    <ClInclude Include="Class\Graphics\Shader\Shader.h" />
     <ClInclude Include="Class\Pch.h" />
     <ClInclude Include="Class\Graphics\GraphicsDevice.h" />
     <ClInclude Include="Class\System\Utility\Utility.h" />

@@ -24,7 +24,7 @@ public:
 	/// </summary>
 	/// <param name="number">ìoò^î‘çÜ</param>
 	/// <returns>SRVÇÃGPUë§ÉAÉhÉåÉX</returns>
-	D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPHandle(int number);
+	D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUHandle(int number);
 private:
 
 	ID3D12Device* pDevice_ = nullptr;
