@@ -25,6 +25,12 @@
     <Filter Include="Source\Graphics\Mesh">
       <UniqueIdentifier>{df688e58-cb5b-4158-9d68-0e2f5ac9198b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset">
+      <UniqueIdentifier>{b928f374-8a64-4b5f-9dbc-018b08b93246}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Shader">
+      <UniqueIdentifier>{f7f99f5d-caeb-4437-974b-526f7afff494}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Class\Application\Application.cpp">
@@ -48,7 +54,9 @@
     <ClCompile Include="Class\Graphics\RTVHeap\RTVHeap.cpp">
       <Filter>Source\Graphics\RTVHeap</Filter>
     </ClCompile>
-    <ClCompile Include="Class\Graphics\Mesh\Mesh.cpp" />
+    <ClCompile Include="Class\Graphics\Mesh\Mesh.cpp">
+      <Filter>Source\Graphics\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Application\Application.h">
@@ -72,9 +80,19 @@
     <ClInclude Include="Class\Graphics\RTVHeap\RTVHeap.h">
       <Filter>Source\Graphics\RTVHeap</Filter>
     </ClInclude>
-    <ClInclude Include="Class\Graphics\Mesh\Mesh.h" />
+    <ClInclude Include="Class\Graphics\Mesh\Mesh.h">
+      <Filter>Source\Graphics\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Asset\Shader\SimpleShader_VS.hlsl">
+      <Filter>Asset\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Asset\Shader\SimpleShader_PS.hlsl">
+      <Filter>Asset\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
