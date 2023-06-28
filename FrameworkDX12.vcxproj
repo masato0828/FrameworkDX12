@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Class\Application\Application.cpp" />
+    <ClCompile Include="Class\Graphics\Mesh\Mesh.cpp" />
     <ClCompile Include="Class\Graphics\RTVHeap\RTVHeap.cpp" />
     <ClCompile Include="Class\Pch.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pch.h</PrecompiledHeaderFile>
@@ -170,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Application\Application.h" />
+    <ClInclude Include="Class\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="Class\Graphics\RTVHeap\RTVHeap.h" />
     <ClInclude Include="Class\Pch.h" />
     <ClInclude Include="Class\Graphics\GraphicsDevice.h" />
@@ -177,7 +179,17 @@
     <ClInclude Include="Class\System\Window\Window.h" />
     <ClInclude Include="Class\System\System.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\directxtk12_uwp.2023.4.28.1\build\native\directxtk12_uwp.targets" Condition="Exists('packages\directxtk12_uwp.2023.4.28.1\build\native\directxtk12_uwp.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\directxtk12_uwp.2023.4.28.1\build\native\directxtk12_uwp.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk12_uwp.2023.4.28.1\build\native\directxtk12_uwp.targets'))" />
+  </Target>
 </Project>

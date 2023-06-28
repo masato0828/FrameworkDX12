@@ -10,6 +10,10 @@ bool GraphicsDevice::Init(HWND hwnd, int width, int height)
 		return false;
 	}
 
+#ifdef _DEBUG
+	EnableDebugLayer();
+#endif // _DEBUG
+
 	if (!CreateDevice())
 	{
 		assert(0&& "D3D12デバイス作成失敗");
@@ -300,4 +304,13 @@ void GraphicsDevice::SetResourceBarrier(ID3D12Resource* pResouce, D3D12_RESOURCE
 	barrier.Transition.StateAfter = after;
 	barrier.Transition.StateBefore = before;
 	pCmdList_->ResourceBarrier(1,&barrier);
+}
+
+void GraphicsDevice::EnableDebugLayer()
+{
+	ID3D12Debug* debugLayer = nullptr;
+
+	D3D12GetDebugInterface(IID_PPV_ARGS(&debugLayer));
+	debugLayer->EnableDebugLayer();			// デバッグレイヤーを有効にする
+	debugLayer->Release();
 }

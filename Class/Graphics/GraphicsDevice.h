@@ -21,6 +21,18 @@ public:
 	/// </summary>
 	void WaitForCommandQueue();
 
+	/// <summary>
+	/// デバイスの取得
+	/// </summary>
+	/// <returns>デバイスのポインタ</returns>
+	ID3D12Device8* GetDevice()const { return pDevice_.Get(); };
+
+	/// <summary>
+	/// コマンドリストの取得
+	/// </summary>
+	/// <returns>コマンドリストのポインタ</returns>
+	ID3D12GraphicsCommandList6* GetCmdList()const { return pCmdList_.Get(); };
+
 private:
 
 	/// <summary>
@@ -69,6 +81,11 @@ private:
 	/// <param name="before">現在の状態</param>
 	/// <param name="after">新しい状態</param>
 	void SetResourceBarrier(ID3D12Resource* pResouce,D3D12_RESOURCE_STATES before,D3D12_RESOURCE_STATES after);
+
+	/// <summary>
+	/// デバッグレイヤーを適用
+	/// </summary>
+	void EnableDebugLayer();
 
 	enum class GPUTier
 	{

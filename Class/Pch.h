@@ -61,6 +61,10 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 
+// DirectX Tool Kit
+#pragma comment(lib,"DirectXTK12.lib")
+#include <SimpleMath.h>
+
 #include "System/System.h"
 #include "System/Utility/Utility.h"
 
