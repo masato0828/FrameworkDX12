@@ -65,6 +65,9 @@
 #pragma comment(lib,"DirectXTK12.lib")
 #include <SimpleMath.h>
 
+#include <d3dcompiler.h>
+#pragma comment(lib,"d3dcompiler.lib")
+
 #include "System/System.h"
 #include "System/Utility/Utility.h"
 

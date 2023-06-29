@@ -6,8 +6,8 @@ void Mesh::Create(GraphicsDevice* pGraphicsDevice)
 
     // í∏ì_ÇÃç¿ïW
     vertices_[0] = {-1.f,-1.f};
-    vertices_[1] = {1.f,1.f};
-    vertices_[2] = {0.f,1.f};
+    vertices_[2] = {1.f,1.f};
+    vertices_[1] = {0.f,1.f};
 
     D3D12_HEAP_PROPERTIES heapProp = {};
     heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;

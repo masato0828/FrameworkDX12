@@ -31,12 +31,30 @@ void Application::Excute()
 		return;
 	}
 
+	Mesh mesh;
+	mesh.Create(&lpGraphicsDevice);
+
+	RenderingSetting renderSetting = {};
+	renderSetting.InputLayouts = {InputLayout::POSITION};
+	renderSetting.Formats = {DXGI_FORMAT_R8G8B8A8_UNORM};
+	renderSetting.IsDepth = false;
+	renderSetting.IsDepthMask = false;
+
+	Shader shader;
+	shader.Create(&lpGraphicsDevice, L"SimpleShader", renderSetting, {});
+
 	while (true)
 	{
 		if (!window_->ProcessMesseage())
 		{
 			break;
 		}
+
+		lpGraphicsDevice.Prepaer();
+
+		shader.Begin(width,height);
+
+		shader.DrawMesh(mesh);
 
 		lpGraphicsDevice.ScreenFlip();
 	}

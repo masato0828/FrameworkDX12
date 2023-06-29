@@ -55,24 +55,29 @@ bool GraphicsDevice::Init(HWND hwnd, int width, int height)
 	return true;
 }
 
-void GraphicsDevice::ScreenFlip()
+void GraphicsDevice::Prepaer()
 {
 	// 1 リソースバリアのステートをレンダーターゲットに変更
 	auto  bbIdx = pSwapChain_->GetCurrentBackBufferIndex();
-	SetResourceBarrier(pSwapchainBuffers_[bbIdx].Get(),D3D12_RESOURCE_STATE_PRESENT,
-		D3D12_RESOURCE_STATE_RENDER_TARGET);
+	SetResourceBarrier(pSwapchainBuffers_[bbIdx].Get(), 
+		D3D12_RESOURCE_STATE_PRESENT,D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	// 2 レンダーターゲットをセット
 	auto rtvH = pRTVHeap_->GetRTVCPUHandle(bbIdx);
-	pCmdList_->OMSetRenderTargets(1,&rtvH,false,nullptr);
+	pCmdList_->OMSetRenderTargets(1, &rtvH, false, nullptr);
 
 	// 3 セットしたレンダーターゲットの画面をクリア
-	float crearColor[] = {1.0f,0.0f,1.0f,1.0f};// 紫色
-	pCmdList_->ClearRenderTargetView(rtvH,crearColor,0,nullptr);
+	float crearColor[] = { 1.0f,0.0f,1.0f,1.0f };// 紫色
+	pCmdList_->ClearRenderTargetView(rtvH, crearColor, 0, nullptr);
+}
+
+void GraphicsDevice::ScreenFlip()
+{
+	auto  bbIdx = pSwapChain_->GetCurrentBackBufferIndex();
 
 	// 4 リソースバリアのステートをプレゼントに戻す
-	SetResourceBarrier(pSwapchainBuffers_[bbIdx].Get(),D3D12_RESOURCE_STATE_RENDER_TARGET,
-		D3D12_RESOURCE_STATE_PRESENT);
+	SetResourceBarrier(pSwapchainBuffers_[bbIdx].Get(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET,D3D12_RESOURCE_STATE_PRESENT);
 
 	// 5 コマンドリストを閉じて実行する
 	pCmdList_->Close();
@@ -227,10 +232,10 @@ bool GraphicsDevice::CreateCommandList()
 	}
 
 	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc = {};
-	cmdQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;// タイムアウトなし
-	cmdQueueDesc.NodeMask = 0;// アダプターを1つしか使わない時は0でいい
+	cmdQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;			// タイムアウトなし
+	cmdQueueDesc.NodeMask = 0;									// アダプターを1つしか使わない時は0でいい
 	cmdQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;// プライオリティは特に指定なし　
-	cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;// コマンドリストと合わせる
+	cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;			// コマンドリストと合わせる
 
 
 	// キュー生成

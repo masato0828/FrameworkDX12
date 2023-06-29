@@ -13,6 +13,11 @@ public:
 	bool Init(HWND hwnd,int width,int height);
 
 	/// <summary>
+	/// 描画準備
+	/// </summary>
+	void Prepaer();
+
+	/// <summary>
 	/// 画面(スワップチェイン)の切り替え
 	/// </summary>
 	void ScreenFlip();
