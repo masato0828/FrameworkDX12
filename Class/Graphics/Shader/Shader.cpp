@@ -36,6 +36,7 @@ void Shader::Begin(int w, int h)
 		break;
 	case D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE:
 		pDevice_->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		//pDevice_->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 		break;
 	case D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH:
 		pDevice_->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);

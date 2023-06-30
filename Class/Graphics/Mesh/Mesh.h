@@ -1,5 +1,5 @@
 #pragma once
-//#include "../../Pch.h"
+#include "../../Pch.h"
 
 class Mesh
 {
@@ -22,7 +22,9 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW	vbView_;
 	D3D12_INDEX_BUFFER_VIEW		ibView_;
 
-	std::array<Math::Vector3, 3> vertices_;
+	//std::array<Math::Vector3, 3> vertices_;
+	std::vector<Math::Vector3> vertices_;
 
+	std::vector<UINT> indices_;
 };
 

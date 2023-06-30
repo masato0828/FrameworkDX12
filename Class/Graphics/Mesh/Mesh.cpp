@@ -5,9 +5,14 @@ void Mesh::Create(GraphicsDevice* pGraphicsDevice)
     pDevice_ = pGraphicsDevice;
 
     // 頂点の座標
-    vertices_[0] = {-1.f,-1.f};
-    vertices_[2] = {1.f,1.f};
-    vertices_[1] = {0.f,1.f};
+    //vertices_[0] = {-0.5f,-0.5f};// 左
+    //vertices_[1] = {0.f,0.5f};//上
+    //vertices_[2] = {0.5f,-0.5f};// 右
+    vertices_.emplace_back(Math::Vector3{-0.1f,-0.2f,0.0f});
+    vertices_.emplace_back(Math::Vector3{-0.1f,0.2f,0.0f});
+    vertices_.emplace_back(Math::Vector3{0.1f,-0.2f,0.0f});
+    vertices_.emplace_back(Math::Vector3{0.1f,0.2f,0.0f});
+
 
     D3D12_HEAP_PROPERTIES heapProp = {};
     heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
@@ -37,6 +42,34 @@ void Mesh::Create(GraphicsDevice* pGraphicsDevice)
     vbView_.SizeInBytes = (UINT)resDesc.Width;
     vbView_.StrideInBytes = sizeof(Math::Vector3);
 
+    // インデックスバッファの作成
+    {
+        // インデックスデータ
+        indices_.emplace_back(0);
+        indices_.emplace_back(1);
+        indices_.emplace_back(2);
+        indices_.emplace_back(2);
+        indices_.emplace_back(1);
+        indices_.emplace_back(3);
+
+        resDesc.Width = sizeof(UINT)* indices_.size();
+
+        // インデックスバッファ作成
+        hr = pDevice_->GetDevice()->CreateCommittedResource(&heapProp,
+            D3D12_HEAP_FLAG_NONE, &resDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+            IID_PPV_ARGS(&pIBuffer_));
+
+        if (FAILED(hr))
+        {
+            assert(0&&"インデックスバッファー作成失敗");
+        }
+
+        // インデックスバッファのデータをビューに書き込む
+        ibView_.BufferLocation = pIBuffer_->GetGPUVirtualAddress();
+        ibView_.SizeInBytes = (UINT)resDesc.Width;
+        ibView_.Format = DXGI_FORMAT_R32_UINT;
+    }
+
     // 頂点バッファに情報を書き込む
     Math::Vector3* vbMap = nullptr;
     {
@@ -44,10 +77,23 @@ void Mesh::Create(GraphicsDevice* pGraphicsDevice)
         std::copy(std::begin(vertices_),std::end(vertices_),vbMap);
         pVBuffer_->Unmap(0,nullptr);
     }
+
+    // インデックスバッファに情報を書き込む
+    UINT* ibMap = nullptr;
+    {
+        pIBuffer_->Map(0,nullptr,(void**)&ibMap);
+        std::copy(std::begin(indices_),std::end(indices_),ibMap);
+        pIBuffer_->Unmap(0,nullptr);
+    }
 }
 
 void Mesh::DrawInstanced() const
 {
     pDevice_->GetCmdList()->IASetVertexBuffers(0,1,&vbView_);
-    pDevice_->GetCmdList()->DrawInstanced(3,1,0,0);
+    //pDevice_->GetCmdList()->DrawInstanced(3,1,0,0);
+    //pDevice_->GetCmdList()->DrawInstanced(4,1,0,0);
+
+    pDevice_->GetCmdList()->IASetIndexBuffer(&ibView_);
+
+    pDevice_->GetCmdList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
