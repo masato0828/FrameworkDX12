@@ -7,11 +7,13 @@
 // 便利機能
 #include "Utility/Utility.h"
 
-// RTVヒープ
-#include "../Graphics/RTVHeap/RTVHeap.h"
-
 // 描画関係のデバイス
 #include "../Graphics/GraphicsDevice.h"
+
+// ヒープ
+#include "../Graphics/Heap/Heap.h"
+#include "../Graphics/Heap/RTVHeap/RTVHeap.h"
+#include "../Graphics/Heap/CBVSRVUAVHeap/CBVSRVUAVHeap.h"
 
 // Mesh
 #include "../Graphics/Mesh/Mesh.h"

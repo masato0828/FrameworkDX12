@@ -1,5 +1,4 @@
 #include "GraphicsDevice.h"
-#include "../Pch.h"
 
 bool GraphicsDevice::Init(HWND hwnd, int width, int height)
 {
@@ -34,9 +33,16 @@ bool GraphicsDevice::Init(HWND hwnd, int width, int height)
 
 
 	pRTVHeap_ = std::make_unique<RTVHeap>();
-	if (!pRTVHeap_->Create(pDevice_.Get(),100))
+	if (!pRTVHeap_->Create(this,HeapType::RTV,100))
 	{
 		assert(0&&"RTVヒープの作成失敗");
+		return false;
+	}
+
+	upCBVSRVUAVHeap_ = std::make_unique<CBVSRVUAVHeap>();
+	if (!upCBVSRVUAVHeap_->Create(this,HeapType::CBVSRVUAV,Math::Vector3(100,100,100)))
+	{
+		assert(0 && "CBVSRVUAVヒープの作成失敗");
 		return false;
 	}
 
@@ -63,7 +69,7 @@ void GraphicsDevice::Prepaer()
 		D3D12_RESOURCE_STATE_PRESENT,D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	// 2 レンダーターゲットをセット
-	auto rtvH = pRTVHeap_->GetRTVCPUHandle(bbIdx);
+	auto rtvH = pRTVHeap_->GetCPUHandle(bbIdx);
 	pCmdList_->OMSetRenderTargets(1, &rtvH, false, nullptr);
 
 	// 3 セットしたレンダーターゲットの画面をクリア

@@ -35,7 +35,7 @@ void Application::Excute()
 	mesh.Create(&lpGraphicsDevice);
 
 	RenderingSetting renderSetting = {};
-	renderSetting.InputLayouts = {InputLayout::POSITION};
+	renderSetting.InputLayouts = {InputLayout::POSITION,InputLayout::TEXCOORD};
 	renderSetting.Formats = {DXGI_FORMAT_R8G8B8A8_UNORM};
 	renderSetting.IsDepth = false;
 	renderSetting.IsDepthMask = false;

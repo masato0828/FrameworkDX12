@@ -1,6 +1,14 @@
 #pragma once
 #include "../../Pch.h"
 
+struct Vertex
+{
+	Vertex(Math::Vector3 position, Math::Vector2 uv) :Position(position), UV(uv) {};
+
+	Math::Vector3 Position;
+	Math::Vector2 UV;
+};
+
 class Mesh
 {
 public:
@@ -23,7 +31,7 @@ private:
 	D3D12_INDEX_BUFFER_VIEW		ibView_;
 
 	//std::array<Math::Vector3, 3> vertices_;
-	std::vector<Math::Vector3> vertices_;
+	std::vector<Vertex> vertices_;
 
 	std::vector<UINT> indices_;
 };

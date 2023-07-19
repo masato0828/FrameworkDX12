@@ -8,10 +8,10 @@ void Mesh::Create(GraphicsDevice* pGraphicsDevice)
     //vertices_[0] = {-0.5f,-0.5f};// 左
     //vertices_[1] = {0.f,0.5f};//上
     //vertices_[2] = {0.5f,-0.5f};// 右
-    vertices_.emplace_back(Math::Vector3{-0.1f,-0.2f,0.0f});
-    vertices_.emplace_back(Math::Vector3{-0.1f,0.2f,0.0f});
-    vertices_.emplace_back(Math::Vector3{0.1f,-0.2f,0.0f});
-    vertices_.emplace_back(Math::Vector3{0.1f,0.2f,0.0f});
+    vertices_.emplace_back(Math::Vector3( - 0.75f, -0.75f, 0.0f), Math::Vector2(0.0f, 1.0f));
+    vertices_.emplace_back(Math::Vector3( - 0.75f, 0.75f, 0.0f), Math::Vector2(0.0f, 1.0f));
+    vertices_.emplace_back(Math::Vector3(0.75f,-0.75f,0.0f), Math::Vector2(1.0f, 1.0f));
+    vertices_.emplace_back(Math::Vector3(0.75f,0.75f,0.0f), Math::Vector2(1.0f, 0.0f));
 
 
     D3D12_HEAP_PROPERTIES heapProp = {};
@@ -21,7 +21,7 @@ void Mesh::Create(GraphicsDevice* pGraphicsDevice)
 
     D3D12_RESOURCE_DESC resDesc = {};
     resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-    resDesc.Width = sizeof(Math::Vector3) * vertices_.size();
+    resDesc.Width = sizeof(Vertex) * vertices_.size();
     resDesc.Height = 1;
     resDesc.DepthOrArraySize = 1;
     resDesc.MipLevels = 1;
@@ -40,7 +40,7 @@ void Mesh::Create(GraphicsDevice* pGraphicsDevice)
 
     vbView_.BufferLocation = pVBuffer_->GetGPUVirtualAddress();
     vbView_.SizeInBytes = (UINT)resDesc.Width;
-    vbView_.StrideInBytes = sizeof(Math::Vector3);
+    vbView_.StrideInBytes = sizeof(Vertex);
 
     // インデックスバッファの作成
     {
@@ -71,7 +71,7 @@ void Mesh::Create(GraphicsDevice* pGraphicsDevice)
     }
 
     // 頂点バッファに情報を書き込む
-    Math::Vector3* vbMap = nullptr;
+    Vertex* vbMap = nullptr;
     {
         pVBuffer_->Map(0, nullptr, (void**)&vbMap);
         std::copy(std::begin(vertices_),std::end(vertices_),vbMap);

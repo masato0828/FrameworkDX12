@@ -1,6 +1,9 @@
 #pragma once
 #include "../Pch.h"
 
+class RTVHeap;
+class CBVSRVUAVHeap;
+
 #define lpGraphicsDevice  GraphicsDevice::Instance()
 
 class GraphicsDevice
@@ -38,6 +41,12 @@ public:
 	/// </summary>
 	/// <returns>コマンドリストのポインタ</returns>
 	ID3D12GraphicsCommandList6* GetCmdList()const { return pCmdList_.Get(); };
+
+	/// <summary>
+	/// CBVSRVUAVヒープの取得
+	/// </summary>
+	/// <returns>CBVSRVUAVヒープのポインタ</returns>
+	CBVSRVUAVHeap* GetCBVSRVUAVHeap()const { return upCBVSRVUAVHeap_.get(); };
 
 private:
 
@@ -114,6 +123,8 @@ private:
 
 	std::array<ComPtr<ID3D12Resource>, 2>	pSwapchainBuffers_;
 	std::unique_ptr<RTVHeap>				pRTVHeap_ = nullptr;
+	std::unique_ptr<CBVSRVUAVHeap>			upCBVSRVUAVHeap_ = nullptr;
+
 
 	ComPtr<ID3D12Fence>						pFence_ = nullptr;
 	UINT64									fenceVal_ = 0;

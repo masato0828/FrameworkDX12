@@ -56,10 +56,12 @@ void Pipeline::Create(std::vector<ID3DBlob*> pBlobs, const std::vector<DXGI_FORM
 	// フィルターモードをセット
 	if (bWireFrame)
 	{
+		// 中身を塗りつぶさない
 		graphicsPipelineState.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
 	}
 	else
 	{
+		// 中身を塗りつぶす	
 		graphicsPipelineState.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
 	}
 
@@ -67,7 +69,7 @@ void Pipeline::Create(std::vector<ID3DBlob*> pBlobs, const std::vector<DXGI_FORM
 	if (bDepth)
 	{
 		graphicsPipelineState.RasterizerState.DepthClipEnable = true;
-		graphicsPipelineState.DepthStencilState.DepthEnable = false;
+		graphicsPipelineState.DepthStencilState.DepthEnable = true;
 		graphicsPipelineState.DepthStencilState.StencilEnable = false;
 	
 		if (bDepthMask)
@@ -97,8 +99,8 @@ void Pipeline::Create(std::vector<ID3DBlob*> pBlobs, const std::vector<DXGI_FORM
 	SetBlendMode(blendDesc,blendMode_);
 
 	graphicsPipelineState.BlendState.RenderTarget[0] = blendDesc;
-	graphicsPipelineState.InputLayout.pInputElementDescs = inputLayouts.data();
-	graphicsPipelineState.InputLayout.NumElements = (int)inputLayouts_.size();
+	graphicsPipelineState.InputLayout.pInputElementDescs = inputLayouts.data();// レイアウト先頭アドレス
+	graphicsPipelineState.InputLayout.NumElements = (int)inputLayouts_.size();//レイアウト配列の要素数
 
 	graphicsPipelineState.PrimitiveTopologyType = (pBlobs[3] && pBlobs[4]) ?
 		D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH : static_cast<D3D12_PRIMITIVE_TOPOLOGY_TYPE>(topologyType_);
@@ -130,7 +132,7 @@ void Pipeline::SetInputLayout(std::vector<D3D12_INPUT_ELEMENT_DESC>& inputElemen
 	{
 		if (inputLayouts[i] == InputLayout::POSITION)
 		{
-			inputElements.emplace_back(D3D12_INPUT_ELEMENT_DESC{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
+			inputElements.emplace_back(D3D12_INPUT_ELEMENT_DESC{"SV_POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
 				D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0});
 		}
 		else if (inputLayouts[i] == InputLayout::TEXCOORD)

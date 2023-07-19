@@ -57,17 +57,20 @@
 //============================================
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
+#pragma comment(lib,"d3dcompiler.lib")
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
+#include <d3dcompiler.h>
 
 // DirectX Tool Kit
 #pragma comment(lib,"DirectXTK12.lib")
 #include <SimpleMath.h>
 
-#include <d3dcompiler.h>
-#pragma comment(lib,"d3dcompiler.lib")
+#pragma comment(lib,"DirectXTex.lib")
+#include <DirectXTex.h>
+
 
 #include "System/System.h"
-#include "System/Utility/Utility.h"
+
 

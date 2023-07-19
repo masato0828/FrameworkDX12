@@ -1,4 +1,6 @@
-float4 main() : SV_TARGET
+#include "inc_SimpleShader.hlsli"
+
+float4 main(VSOutput In) : SV_TARGET
 {
-	return float4(1.0f, 1.0f, 1.0f, 1.0f);
+	return float4(In.uv.r,In.uv.g, 0.0f, 1.0f);
 }

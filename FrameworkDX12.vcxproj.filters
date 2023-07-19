@@ -19,9 +19,6 @@
     <Filter Include="Source\System\Utility">
       <UniqueIdentifier>{e7e3e37a-541c-45f0-9fa4-6830dde507a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Graphics\RTVHeap">
-      <UniqueIdentifier>{cb7836cb-9428-45b8-a0f6-e029a6989873}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Graphics\Mesh">
       <UniqueIdentifier>{df688e58-cb5b-4158-9d68-0e2f5ac9198b}</UniqueIdentifier>
     </Filter>
@@ -40,6 +37,15 @@
     <Filter Include="Source\Graphics\Shader\Pipeline">
       <UniqueIdentifier>{960a5abc-db71-4e9a-9403-894c15239098}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\Heap">
+      <UniqueIdentifier>{f73b265f-87cc-4151-b2b3-089348df3e71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Heap\CBVSRVUAVHeap">
+      <UniqueIdentifier>{1cc801cd-f4a3-463e-b12c-c8aa21ae919f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Heap\RTVHeap">
+      <UniqueIdentifier>{cb7836cb-9428-45b8-a0f6-e029a6989873}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Class\Application\Application.cpp">
@@ -47,9 +53,6 @@
     </ClCompile>
     <ClCompile Include="Class\System\Window\Window.cpp">
       <Filter>Source\System\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Pch.cpp">
-      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Class\System\Utility\Utility.cpp">
       <Filter>Source\System\Utility</Filter>
@@ -59,9 +62,6 @@
     </ClCompile>
     <ClCompile Include="Class\System\System.cpp">
       <Filter>Source\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Graphics\RTVHeap\RTVHeap.cpp">
-      <Filter>Source\Graphics\RTVHeap</Filter>
     </ClCompile>
     <ClCompile Include="Class\Graphics\Mesh\Mesh.cpp">
       <Filter>Source\Graphics\Mesh</Filter>
@@ -74,6 +74,15 @@
     </ClCompile>
     <ClCompile Include="Class\Graphics\Shader\RootSignature\RootSignature.cpp">
       <Filter>Source\Graphics\Shader\RootSignature</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Graphics\Heap\CBVSRVUAVHeap\CBVSRVUAVHeap.cpp">
+      <Filter>Source\Graphics\Heap\CBVSRVUAVHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Pch.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Graphics\Heap\RTVHeap\RTVHeap.cpp">
+      <Filter>Source\Graphics\Heap\RTVHeap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -95,9 +104,6 @@
     <ClInclude Include="Class\Graphics\GraphicsDevice.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Class\Graphics\RTVHeap\RTVHeap.h">
-      <Filter>Source\Graphics\RTVHeap</Filter>
-    </ClInclude>
     <ClInclude Include="Class\Graphics\Mesh\Mesh.h">
       <Filter>Source\Graphics\Mesh</Filter>
     </ClInclude>
@@ -110,9 +116,21 @@
     <ClInclude Include="Class\Graphics\Shader\RootSignature\RootSignature.h">
       <Filter>Source\Graphics\Shader\RootSignature</Filter>
     </ClInclude>
+    <ClInclude Include="Class\Graphics\Heap\CBVSRVUAVHeap\CBVSRVUAVHeap.h">
+      <Filter>Source\Graphics\Heap\CBVSRVUAVHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Graphics\Heap\Heap.h">
+      <Filter>Source\Graphics\Heap</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Graphics\Heap\RTVHeap\RTVHeap.h">
+      <Filter>Source\Graphics\Heap\RTVHeap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Asset\Shader\inc_SimpleShader.hlsli">
+      <Filter>Asset\Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Asset\Shader\SimpleShader_VS.hlsl">
